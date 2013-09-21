@@ -6,8 +6,23 @@ import android.view.Menu;
 import android.widget.ArrayAdapter;
 
 import org.ktln2.android.androidhelperlibrary.widget.SearchBox;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.AnticipateOvershootInterpolator;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.ObjectAnimator;
+
+import org.ktln2.android.androidhelperlibrary.animation.LayoutParamsEvaluator;
+
 
 public class MainActivity extends Activity {
+    private LinearLayout mExpandableLayout;
+    private int mInitialWidth;
+    private int mInitialHeight;
+    private boolean mIsExpanded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,12 +37,62 @@ public class MainActivity extends Activity {
             android.R.layout.simple_list_item_1,
             getResources().getStringArray(R.array.names)
         ));
+
+        configureExpandableLayout();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
+    Animator.AnimatorListener expandAnimatorListener = new Animator.AnimatorListener() {
+        @Override
+        public void onAnimationStart(Animator animation) {
+        }
+
+        @Override
+        public void onAnimationEnd(Animator animation) {
+            mIsExpanded = !mIsExpanded;
+        }
+
+        @Override
+        public void onAnimationCancel(Animator animation) {
+        }
+
+        @Override
+        public void onAnimationRepeat(Animator animation) {
+
+        }
+    };
+
+    private View.OnClickListener onExpandableClicked = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            ViewGroup.LayoutParams originalLp = mExpandableLayout.getLayoutParams();
+            ViewGroup.LayoutParams startLp = new ViewGroup.LayoutParams(originalLp);
+            ViewGroup.LayoutParams finalLp = new ViewGroup.LayoutParams(originalLp);
+
+            // get the starting dimensions to avoid wrap_content/match_parent
+            // misleading values
+            startLp.height = mIsExpanded ? 500 : mExpandableLayout.getHeight();
+            startLp.width = mIsExpanded ? 500 : mExpandableLayout.getWidth();
+
+            finalLp.width = mIsExpanded ? 200 : 500;
+            finalLp.height = mIsExpanded? 200: 500;
+
+            ObjectAnimator animator = ObjectAnimator.ofObject(
+                    mExpandableLayout,
+                    "layoutParams",
+                    new LayoutParamsEvaluator<RelativeLayout.LayoutParams, LinearLayout>(
+                            mExpandableLayout),
+                    startLp,
+                    finalLp
+            );
+            animator.setInterpolator(new AnticipateOvershootInterpolator());
+            animator.addListener(expandAnimatorListener);
+            animator.start();
+        }
+    };
+
+    private void configureExpandableLayout() {
+        mExpandableLayout = (LinearLayout)findViewById(R.id.main_expandable_layout);
+
+        mExpandableLayout.setOnClickListener(onExpandableClicked);
     }
 }
