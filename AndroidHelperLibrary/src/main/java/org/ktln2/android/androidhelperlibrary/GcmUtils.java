@@ -19,6 +19,8 @@ import java.io.IOException;
 /**
  * Code shamelessly copied from the getting started guide of Android
  * about Gcm services.
+ *
+ * You have to insert a <metadata> entry with the gcmSenderId attribute set.
  */
 public class GcmUtils {
     private final static String TAG = "GcmUtils";
