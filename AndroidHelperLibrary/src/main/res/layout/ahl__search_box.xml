@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android" >
     <AutoCompleteTextView
-        android:id="@+id/maps_search_box"
+        android:id="@+id/ahl__searchbox_autocomplete"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
@@ -9,10 +9,10 @@
         android:imeOptions="actionSearch"
         android:singleLine="true"
         />
-    <ImageButton android:id="@+id/map_search_cancel_button"
+    <ImageButton android:id="@+id/ahl__searchbox_action"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ahl_search_cancel"
+        android:src="@drawable/ahl_search_states"
         android:background="@android:color/transparent"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
