@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import org.ktln2.android.androidhelperlibrary.widget.SearchBox;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.AnticipateOvershootInterpolator;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -70,11 +71,11 @@ public class MainActivity extends Activity {
 
             // get the starting dimensions to avoid wrap_content/match_parent
             // misleading values
-            startLp.height = mIsExpanded ? 500 : mExpandableLayout.getHeight();
-            startLp.width = mIsExpanded ? 500 : mExpandableLayout.getWidth();
+            startLp.height = mIsExpanded ? 500 : mInitialHeight;
+            startLp.width = mIsExpanded ? 500 : mInitialWidth;
 
-            finalLp.width = mIsExpanded ? 200 : 500;
-            finalLp.height = mIsExpanded? 200: 500;
+            finalLp.width = mIsExpanded ? mInitialWidth : 500;
+            finalLp.height = mIsExpanded? mInitialHeight: 500;
 
             ObjectAnimator animator = ObjectAnimator.ofObject(
                     mExpandableLayout,
@@ -92,6 +93,16 @@ public class MainActivity extends Activity {
 
     private void configureExpandableLayout() {
         mExpandableLayout = (LinearLayout)findViewById(R.id.main_expandable_layout);
+        // because of the layout system we have to wait in order to know the size of the mExpandableLayout
+        mExpandableLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                mExpandableLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                mInitialHeight = mExpandableLayout.getHeight();
+                mInitialWidth  = mExpandableLayout.getWidth();
+            }
+        });
 
         mExpandableLayout.setOnClickListener(onExpandableClicked);
     }
