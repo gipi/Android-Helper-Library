@@ -1,1 +1,17 @@
 Some helper in Android development. More to come
+
+MAVEN REPOSITORY
+----------------
+
+Add the following line to your project
+  repositories {
+    mavenCentral()
+    maven {
+        url "http://gipi.github.io/Android-Helper-Library/maven/release/"
+    }
+  }
+
+  dependencies {
+	compile 'com.android.support:appcompat-v7:+'
+    compile 'org.ktln2.android:AndroidHelperLibrary:0.0.1'
+  }
