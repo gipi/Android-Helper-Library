@@ -7,6 +7,24 @@ buildscript {
     }
 }
 
+apply plugin: 'maven'
+
+version = "0.0.1"
+group = "org.ktln2.android"
+
+configurations {
+    archives {
+        extendsFrom configurations.default
+    }
+}
+
+uploadArchives {
+    repositories.mavenDeployer {
+        repository(url: "file:///tmp/maven/release/")
+    }
+}
+
+
 apply plugin: 'android-library'
 
 repositories {
