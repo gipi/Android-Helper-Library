@@ -1,1 +1,1 @@
-include ':AndroidHelperLibrary'
+include ':AndroidHelperLibrary', ':AHLsample'
